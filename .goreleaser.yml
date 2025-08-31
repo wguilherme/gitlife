@@ -80,7 +80,7 @@ release:
   github:
     owner: wguilherme
     name: gitlife
-  discussion_category_name: General
+# discussion_category_name: General  # Disabled - discussions not enabled on repo
   prerelease: auto
   mode: replace
   header: |
