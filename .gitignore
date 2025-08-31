@@ -43,3 +43,6 @@ k8s/*-secret.yaml
 # Config overrides
 .env
 .env.local
+
+# Build artifacts
+dist/
