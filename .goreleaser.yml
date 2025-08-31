@@ -94,8 +94,8 @@ release:
 
     #### Download Binary
     ```bash
-    # Linux/macOS
-    curl -L https://github.com/wguilherme/gitlife/releases/download/{{ .Tag }}/gitlife_{{ .Os }}_{{ .Arch }}.tar.gz | tar xz
+    # Linux/macOS (replace OS_ARCH with your platform)
+    curl -L https://github.com/wguilherme/gitlife/releases/download/{{ .Tag }}/gitlife_Linux_x86_64.tar.gz | tar xz
     chmod +x gitlife
     sudo mv gitlife /usr/local/bin/
     ```
