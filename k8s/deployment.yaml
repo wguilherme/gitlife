@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlife
+  namespace: gitlife
+  labels:
+    app: gitlife
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlife
+  template:
+    metadata:
+      labels:
+        app: gitlife
+    spec:
+      serviceAccountName: gitlife
+      containers:
+      - name: gitlife
+        image: gitlife:latest
+        imagePullPolicy: Always
+        command: ["./gitlife"]
+        args: ["server"] # Add server command when implementing web interface
+        env:
+        - name: GITLIFE_VAULT_REPO
+          valueFrom:
+            configMapKeyRef:
+              name: gitlife-config
+              key: vault_repo
+        - name: GITLIFE_VAULT_PATH
+          value: /data/vault
+        - name: GITLIFE_SSH_KEY_PATH
+          value: /secrets/ssh/id_rsa
+        - name: GITLIFE_GIT_USER_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: gitlife-config
+              key: git_user_name
+        - name: GITLIFE_GIT_USER_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              name: gitlife-config
+              key: git_user_email
+        - name: GITLIFE_AUTO_SYNC
+          value: "true"
+        - name: GITLIFE_AUTO_COMMIT
+          value: "true"
+        - name: GITLIFE_SYNC_INTERVAL
+          value: "300"
+        volumeMounts:
+        - name: ssh-keys
+          mountPath: /secrets/ssh
+          readOnly: true
+        - name: vault-data
+          mountPath: /data/vault
+        - name: ssh-config
+          mountPath: /home/gitlife/.ssh/known_hosts
+          subPath: known_hosts
+          readOnly: true
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - ./gitlife
+            - vault
+            - status
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        readinessProbe:
+          exec:
+            command:
+            - ./gitlife
+            - vault
+            - status
+          initialDelaySeconds: 10
+          periodSeconds: 30
+      volumes:
+      - name: ssh-keys
+        secret:
+          secretName: gitlife-ssh-key
+          defaultMode: 0400
+      - name: vault-data
+        persistentVolumeClaim:
+          claimName: gitlife-vault-pvc
+      - name: ssh-config
+        configMap:
+          name: gitlife-ssh-config
+          defaultMode: 0644

@@ -1,0 +1,175 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod download
+
+project_name: gitlife
+
+builds:
+  - id: gitlife
+    main: ./cmd/gitlife/main.go
+    binary: gitlife
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+
+archives:
+  - id: gitlife
+    format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE*
+      - k8s/**/*
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - Merge pull request
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: "Bug fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: "Performance improvements"
+      regexp: '^.*?perf(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: Others
+      order: 999
+
+release:
+  github:
+    owner: wguilherme
+    name: gitlife
+  discussion_category_name: General
+  prerelease: auto
+  mode: replace
+  header: |
+    ## GitLife {{ .Tag }}
+
+    Personal productivity system for developers using Git as a database.
+
+    ### What's Changed
+  footer: |
+    ### Installation
+
+    #### Download Binary
+    ```bash
+    # Linux/macOS
+    curl -L https://github.com/wguilherme/gitlife/releases/download/{{ .Tag }}/gitlife_{{ .Os }}_{{ .Arch }}.tar.gz | tar xz
+    chmod +x gitlife
+    sudo mv gitlife /usr/local/bin/
+    ```
+
+    #### Using Go
+    ```bash
+    go install github.com/wguilherme/gitlife/cmd/gitlife@{{ .Tag }}
+    ```
+
+    #### Docker
+    ```bash
+    docker run --rm ghcr.io/wguilherme/gitlife:{{ .Tag }} --help
+    ```
+
+    ### Quick Start
+    ```bash
+    # Clone your vault repository
+    gitlife vault clone git@github.com:user/vault.git
+
+    # Add a book to your reading list
+    gitlife reading add "Clean Code" --author="Robert Martin" --type=book
+
+    # List your reading items
+    gitlife reading list
+    ```
+
+    For more information, visit the [documentation](https://github.com/wguilherme/gitlife#readme).
+
+dockers:
+  - image_templates:
+      - "ghcr.io/wguilherme/gitlife:{{ .Version }}-amd64"
+      - "ghcr.io/wguilherme/gitlife:latest-amd64"
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+  - image_templates:
+      - "ghcr.io/wguilherme/gitlife:{{ .Version }}-arm64"
+      - "ghcr.io/wguilherme/gitlife:latest-arm64"
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+docker_manifests:
+  - name_template: "ghcr.io/wguilherme/gitlife:{{ .Version }}"
+    image_templates:
+      - "ghcr.io/wguilherme/gitlife:{{ .Version }}-amd64"
+      - "ghcr.io/wguilherme/gitlife:{{ .Version }}-arm64"
+  - name_template: "ghcr.io/wguilherme/gitlife:latest"
+    image_templates:
+      - "ghcr.io/wguilherme/gitlife:latest-amd64"
+      - "ghcr.io/wguilherme/gitlife:latest-arm64"
+
+brews:
+  - name: gitlife
+    repository:
+      owner: wguilherme
+      name: homebrew-tap
+      branch: main
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    homepage: "https://github.com/wguilherme/gitlife"
+    description: "Personal productivity system for developers using Git as database"
+    license: "MIT"
+    test: |
+      system "#{bin}/gitlife --help"
+    install: |
+      bin.install "gitlife"

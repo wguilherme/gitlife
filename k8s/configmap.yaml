@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitlife-config
+  namespace: gitlife
+data:
+  vault_repo: "git@github.com:your-org/gitlife-vault.git"
+  git_user_name: "GitLife Bot"
+  git_user_email: "gitlife@example.com"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitlife-ssh-config
+  namespace: gitlife
+data:
+  known_hosts: |
+    github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+    github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
+    gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+    gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi35aw3OtSB1Y6whg1YQWCCg4Cl3mCStLuC3XnOLSHFsfHVBZGRfp4QBm/HB/p9jNwfTwIU9K4gAKI5vUx4lY9qpn8OSYZKmGp4voHfNnEOXdx3xfqrJ1La9TS7bXCPmdfgwpd82L7OqJ8NgdHzaRX6K7IdPPWX5Qm9kBHdbNOL91DFW8b5z4O7wNNBqCfOYr/f+5Za2sXVdZTQnvVUNQrBnIChRj3A0y5pZ0wIcqQlJSpnqBsW
