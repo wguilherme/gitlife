@@ -1,2 +1,45 @@
+# Binaries
 gitlife
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go workspace file
+go.work
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local data
+vault/
+*.log
+
+# Temporary files
+*.tmp
+*.bak
 project_structure.png
+
+# Docker
+.dockerignore
+
+# Kubernetes secrets (never commit)
+k8s/*-secret.yaml
+!k8s/secret-example.yaml
+
+# Config overrides
+.env
+.env.local

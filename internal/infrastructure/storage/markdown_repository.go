@@ -3,18 +3,23 @@ package storage
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/wguilherme/gitlife/internal/config"
 	"github.com/wguilherme/gitlife/internal/domain/reading"
+	"github.com/wguilherme/gitlife/internal/infrastructure/git"
 	"github.com/wguilherme/gitlife/internal/infrastructure/parser"
 )
 
 type MarkdownRepository struct {
-	filePath string
-	parser   *parser.ReadingParser
+	filePath   string
+	parser     *parser.ReadingParser
+	gitService *git.Service
+	config     *config.Config
 }
 
 func NewMarkdownRepository(vaultPath string) *MarkdownRepository {
@@ -24,7 +29,23 @@ func NewMarkdownRepository(vaultPath string) *MarkdownRepository {
 	}
 }
 
+func NewMarkdownRepositoryWithGit(cfg *config.Config, gitService *git.Service) *MarkdownRepository {
+	return &MarkdownRepository{
+		filePath:   filepath.Join(cfg.VaultPath, "reading.md"),
+		parser:     parser.NewReadingParser(),
+		gitService: gitService,
+		config:     cfg,
+	}
+}
+
 func (r *MarkdownRepository) FindAll() ([]*reading.Item, error) {
+	// Pull latest changes if git is configured
+	if r.gitService != nil && r.config != nil && r.config.AutoSync {
+		if err := r.gitService.Pull(); err != nil {
+			log.Printf("Warning: git pull failed: %v", err)
+		}
+	}
+
 	content, err := os.ReadFile(r.filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -179,7 +200,42 @@ func (r *MarkdownRepository) writeToFile(items []*reading.Item) error {
 		return fmt.Errorf("failed to create directory: %w", err)
 	}
 
-	return os.WriteFile(r.filePath, buf.Bytes(), 0644)
+	if err := os.WriteFile(r.filePath, buf.Bytes(), 0644); err != nil {
+		return err
+	}
+
+	// Auto-commit and push if git is configured
+	if r.gitService != nil && r.config != nil && r.config.AutoCommit {
+		if err := r.gitCommitAndPush("Update reading list"); err != nil {
+			log.Printf("Warning: git commit/push failed: %v", err)
+		}
+	}
+
+	return nil
+}
+
+func (r *MarkdownRepository) gitCommitAndPush(message string) error {
+	// Add the file
+	if err := r.gitService.Add([]string{"reading.md"}); err != nil {
+		return fmt.Errorf("git add failed: %w", err)
+	}
+
+	// Commit
+	if message == "" {
+		message = r.config.CommitMessage
+	}
+	if err := r.gitService.Commit(message); err != nil {
+		return fmt.Errorf("git commit failed: %w", err)
+	}
+
+	// Push if auto-sync is enabled
+	if r.config.AutoSync {
+		if err := r.gitService.Push(); err != nil {
+			return fmt.Errorf("git push failed: %w", err)
+		}
+	}
+
+	return nil
 }
 
 func (r *MarkdownRepository) writeItem(buf *bytes.Buffer, item *reading.Item) {
