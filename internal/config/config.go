@@ -8,8 +8,8 @@ import (
 
 type Config struct {
 	// Vault configuration
-	VaultRepo   string
-	VaultPath   string
+	VaultRepo     string
+	VaultPath     string
 	GitLifeFolder string
 
 	// Authentication

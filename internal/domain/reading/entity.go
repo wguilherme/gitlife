@@ -45,7 +45,7 @@ func (i *Item) Start(date time.Time) error {
 	i.Status = StatusReading
 	i.Metadata.Started = &date
 	i.Progress = &Progress{Percentage: 0}
-	
+
 	return nil
 }
 
@@ -60,7 +60,7 @@ func (i *Item) Finish(date time.Time, rating Rating) error {
 	if i.Progress != nil {
 		i.Progress.Percentage = 100
 	}
-	
+
 	return nil
 }
 

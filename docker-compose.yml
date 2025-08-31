@@ -1,0 +1,38 @@
+# Docker Compose configuration for GitLife development environment
+
+services:
+  gitlife-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: gitlife-api
+    ports:
+      - "8080:8080"
+    environment:
+      - GITLIFE_VAULT_PATH=/data/vault
+      - GITLIFE_VAULT_REPO=${GITLIFE_VAULT_REPO:-}
+      - GITLIFE_SSH_KEY_PATH=/home/gitlife/.ssh/id_rsa
+      - GITLIFE_GIT_USER_NAME=${GITLIFE_GIT_USER_NAME:-GitLife}
+      - GITLIFE_GIT_USER_EMAIL=${GITLIFE_GIT_USER_EMAIL:-gitlife@local}
+      - GITLIFE_AUTO_SYNC=${GITLIFE_AUTO_SYNC:-true}
+      - GITLIFE_AUTO_COMMIT=${GITLIFE_AUTO_COMMIT:-true}
+      - GITLIFE_DEBUG=${GITLIFE_DEBUG:-false}
+    volumes:
+      - ./vault:/data/vault
+      - ~/.ssh:/home/gitlife/.ssh:ro
+    networks:
+      - gitlife-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+
+networks:
+  gitlife-network:
+    driver: bridge
+
+volumes:
+  vault_data:

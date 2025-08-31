@@ -243,10 +243,10 @@ func (r *MarkdownRepository) gitCommitAndPush(message string) error {
 
 func (r *MarkdownRepository) writeItem(buf *bytes.Buffer, item *reading.Item) {
 	buf.WriteString(fmt.Sprintf("### [[%s]]\n", item.Title))
-	
+
 	buf.WriteString(fmt.Sprintf("- **type**: %s\n", item.Type))
 	buf.WriteString(fmt.Sprintf("- **author**: %s\n", item.Author))
-	
+
 	if len(item.Tags) > 0 {
 		tags := []string{}
 		for _, tag := range item.Tags {
@@ -254,23 +254,23 @@ func (r *MarkdownRepository) writeItem(buf *bytes.Buffer, item *reading.Item) {
 		}
 		buf.WriteString(fmt.Sprintf("- **tags**: %s\n", strings.Join(tags, " ")))
 	}
-	
+
 	if item.Priority != "" && item.Priority != reading.PriorityMedium {
 		buf.WriteString(fmt.Sprintf("- **priority**: %s\n", item.Priority))
 	}
-	
+
 	if !item.Metadata.Added.IsZero() {
 		buf.WriteString(fmt.Sprintf("- **added**: %s\n", item.Metadata.Added.Format("2006-01-02")))
 	}
-	
+
 	if item.Metadata.Started != nil {
 		buf.WriteString(fmt.Sprintf("- **started**: %s\n", item.Metadata.Started.Format("2006-01-02")))
 	}
-	
+
 	if item.Metadata.Finished != nil {
 		buf.WriteString(fmt.Sprintf("- **finished**: %s\n", item.Metadata.Finished.Format("2006-01-02")))
 	}
-	
+
 	if item.Progress != nil {
 		if item.Progress.Percentage > 0 {
 			buf.WriteString(fmt.Sprintf("- **progress**: %d%%\n", item.Progress.Percentage))
@@ -282,7 +282,7 @@ func (r *MarkdownRepository) writeItem(buf *bytes.Buffer, item *reading.Item) {
 			buf.WriteString(fmt.Sprintf("- **pages**: %d\n", item.Progress.TotalPages))
 		}
 	}
-	
+
 	if item.Rating != nil {
 		stars := ""
 		for i := 0; i < item.Rating.Value(); i++ {
@@ -290,18 +290,18 @@ func (r *MarkdownRepository) writeItem(buf *bytes.Buffer, item *reading.Item) {
 		}
 		buf.WriteString(fmt.Sprintf("- **rating**: %s\n", stars))
 	}
-	
+
 	if item.Metadata.URL != "" {
 		buf.WriteString(fmt.Sprintf("- **url**: %s\n", item.Metadata.URL))
 	}
-	
+
 	if item.Metadata.Notes != "" {
 		buf.WriteString(fmt.Sprintf("- **notes**: %s\n", item.Metadata.Notes))
 	}
-	
+
 	if item.Metadata.Review != "" {
 		buf.WriteString(fmt.Sprintf("- **review**: %s\n", item.Metadata.Review))
 	}
-	
+
 	buf.WriteString("\n")
 }

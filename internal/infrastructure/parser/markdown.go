@@ -55,15 +55,15 @@ func (p *Parser) Parse(content []byte) (*Document, error) {
 	inFrontmatter := false
 	frontmatterLines := []string{}
 	contentLines := []string{}
-	
+
 	for i, line := range lines {
 		lineStr := string(line)
-		
+
 		if i == 0 && lineStr == "---" {
 			inFrontmatter = true
 			continue
 		}
-		
+
 		if inFrontmatter {
 			if lineStr == "---" {
 				inFrontmatter = false
@@ -91,7 +91,7 @@ func (p *Parser) Parse(content []byte) (*Document, error) {
 func (p *Parser) parseSections(content string) []Section {
 	sections := []Section{}
 	scanner := bufio.NewScanner(strings.NewReader(content))
-	
+
 	var currentSection *Section
 	var currentItem *Item
 	inItemProperties := false

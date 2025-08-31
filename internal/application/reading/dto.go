@@ -28,21 +28,21 @@ type FinishItemCommand struct {
 }
 
 type ItemDTO struct {
-	ID          string    `json:"id"`
-	Title       string    `json:"title"`
-	Author      string    `json:"author"`
-	Type        string    `json:"type"`
-	Status      string    `json:"status"`
-	Priority    string    `json:"priority"`
-	Tags        []string  `json:"tags"`
-	Progress    int       `json:"progress,omitempty"`
-	CurrentPage int       `json:"current_page,omitempty"`
-	TotalPages  int       `json:"total_pages,omitempty"`
-	Rating      int       `json:"rating,omitempty"`
-	URL         string    `json:"url,omitempty"`
-	Notes       string    `json:"notes,omitempty"`
-	Review      string    `json:"review,omitempty"`
-	Added       time.Time `json:"added"`
+	ID          string     `json:"id"`
+	Title       string     `json:"title"`
+	Author      string     `json:"author"`
+	Type        string     `json:"type"`
+	Status      string     `json:"status"`
+	Priority    string     `json:"priority"`
+	Tags        []string   `json:"tags"`
+	Progress    int        `json:"progress,omitempty"`
+	CurrentPage int        `json:"current_page,omitempty"`
+	TotalPages  int        `json:"total_pages,omitempty"`
+	Rating      int        `json:"rating,omitempty"`
+	URL         string     `json:"url,omitempty"`
+	Notes       string     `json:"notes,omitempty"`
+	Review      string     `json:"review,omitempty"`
+	Added       time.Time  `json:"added"`
 	Started     *time.Time `json:"started,omitempty"`
 	Finished    *time.Time `json:"finished,omitempty"`
 }

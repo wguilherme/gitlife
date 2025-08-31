@@ -100,7 +100,7 @@ func (s *Service) Clone() error {
 
 func (s *Service) Pull() error {
 	s.setupSSH()
-	
+
 	if !s.RepoExists() {
 		return fmt.Errorf("repository does not exist at %s", s.repoPath)
 	}
@@ -139,8 +139,8 @@ func (s *Service) Push() error {
 	s.setupSSH()
 
 	if err := s.runGitCommand("push"); err != nil {
-		if strings.Contains(err.Error(), "up-to-date") || 
-		   strings.Contains(err.Error(), "up to date") {
+		if strings.Contains(err.Error(), "up-to-date") ||
+			strings.Contains(err.Error(), "up to date") {
 			return nil
 		}
 		return fmt.Errorf("git push failed: %w", err)
@@ -190,7 +190,7 @@ func (s *Service) configureUser() error {
 func (s *Service) runGitCommand(args ...string) error {
 	cmd := exec.Command("git", args...)
 	cmd.Dir = s.repoPath
-	
+
 	if s.debug {
 		fmt.Printf("[DEBUG] Running: git %s in %s\n", strings.Join(args, " "), s.repoPath)
 	}

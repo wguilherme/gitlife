@@ -1,4 +1,7 @@
 # GitLife Makefile
+include .env
+export
+
 .PHONY: build test clean install dev release release-snapshot deps
 
 # Build variables
@@ -82,17 +85,62 @@ tag:
 
 # Run locally with environment
 run:
-	@source .env 2>/dev/null || true; ./$(BINARY_NAME) $(ARGS)
+	@./$(BINARY_NAME) $(ARGS)
+
+# Build server binary
+build-server:
+	CGO_ENABLED=0 $(GOBUILD) $(LDFLAGS) -o gitlife-server cmd/gitlife-server/main.go
+
+# Run HTTP server
+server: build-server
+	@./gitlife-server --port=8080
+
+# Complete setup and run server for frontend integration
+up: down
+	@echo "🚀 Starting GitLife development environment..."
+	@echo "📋 Backend API will be available at: http://localhost:8080"
+	@echo "💡 Run 'npm run start' in ui/gitlife-ui/ for frontend"
+	@docker-compose up --build
+
+# Stop development environment
+down:
+	@echo "🛑 Stopping GitLife development environment..."
+	@docker-compose down
+
+# View logs from both services
+logs:
+	@docker-compose logs -f
+
+# Clean Docker containers and images
+clean-docker:
+	@echo "🧹 Cleaning Docker containers and images..."
+	@docker-compose down -v --remove-orphans
+	@docker system prune -f
+
+# Start frontend (Electron app)
+frontend:
+	@echo "🖥️ Starting GitLife frontend..."
+	@cd ui/gitlife-ui && npm run start
+
+# Development environment: backend + frontend
+dev-full:
+	@echo "🚀 Starting complete GitLife development environment..."
+	@echo "📋 Backend API will be available at: http://localhost:8080"
+	@echo "🖥️ Starting backend..."
+	@docker-compose up -d --build
+	@sleep 5
+	@echo "🖥️ Starting frontend..."
+	@cd ui/gitlife-ui && npm run start
 
 # Development commands
 dev-vault-clone:
-	@source .env && ./$(BINARY_NAME) vault clone $(REPO)
+	@./$(BINARY_NAME) vault clone $(REPO)
 
 dev-reading-add:
-	@source .env && ./$(BINARY_NAME) reading add $(TITLE) --author="$(AUTHOR)" --type=$(TYPE)
+	@./$(BINARY_NAME) reading add $(TITLE) --author="$(AUTHOR)" --type=$(TYPE)
 
 dev-reading-list:
-	@source .env && ./$(BINARY_NAME) reading list
+	@./$(BINARY_NAME) reading list
 
 # Docker commands
 docker-build:
@@ -120,6 +168,14 @@ help:
 	@echo "  make test            - Run tests"
 	@echo "  make test-coverage   - Run tests with coverage"
 	@echo "  make run ARGS='...'  - Run with local environment"
+	@echo "  make server          - Build and run HTTP server on port 8080"
+	@echo "  make build-server    - Build server binary only"
+	@echo "  make up              - Start backend API (Docker)"
+	@echo "  make frontend        - Start frontend (Electron app)"
+	@echo "  make dev-full        - Start complete development environment"
+	@echo "  make down            - Stop development environment"
+	@echo "  make logs            - View development environment logs"
+	@echo "  make clean-docker    - Clean Docker containers and images"
 	@echo ""
 	@echo "Release:"
 	@echo "  make tag             - Create and push new version tag"

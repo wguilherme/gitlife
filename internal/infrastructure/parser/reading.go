@@ -46,7 +46,7 @@ func (rp *ReadingParser) ParseDocument(content []byte) ([]*reading.Item, error) 
 
 func (rp *ReadingParser) sectionToStatus(title string) reading.Status {
 	title = strings.ToLower(title)
-	
+
 	if strings.Contains(title, "to read") || strings.Contains(title, "backlog") {
 		return reading.StatusToRead
 	}
@@ -56,7 +56,7 @@ func (rp *ReadingParser) sectionToStatus(title string) reading.Status {
 	if strings.Contains(title, "done") || strings.Contains(title, "completed") || strings.Contains(title, "finished") {
 		return reading.StatusDone
 	}
-	
+
 	return ""
 }
 
@@ -84,7 +84,7 @@ func (rp *ReadingParser) itemToReadingItem(item Item, status reading.Status) (*r
 	readingItem.Status = status
 	readingItem.Priority = rp.parsePriority(item.Properties["priority"])
 	readingItem.Tags = rp.parseTags(item.Properties["tags"])
-	
+
 	metadata := reading.Metadata{
 		URL:    item.Properties["url"],
 		Notes:  item.Properties["notes"],
@@ -172,14 +172,14 @@ func (rp *ReadingParser) parsePriority(priorityStr string) reading.Priority {
 func (rp *ReadingParser) parseTags(tagsStr string) []reading.Tag {
 	tags := []reading.Tag{}
 	parts := strings.Fields(tagsStr)
-	
+
 	for _, part := range parts {
 		tag := strings.TrimPrefix(part, "#")
 		if tag != "" {
 			tags = append(tags, reading.Tag(tag))
 		}
 	}
-	
+
 	return tags
 }
 
@@ -196,10 +196,10 @@ func (rp *ReadingParser) parseRating(ratingStr string) int {
 	if stars > 0 {
 		return stars
 	}
-	
+
 	if val, err := strconv.Atoi(ratingStr); err == nil {
 		return val
 	}
-	
+
 	return 0
 }

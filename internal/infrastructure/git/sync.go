@@ -30,7 +30,7 @@ func (s *SyncService) Start() {
 
 	go func() {
 		log.Printf("Starting Git sync service (interval: %v)", s.interval)
-		
+
 		for {
 			select {
 			case <-ticker.C:
@@ -68,7 +68,7 @@ func (s *SyncService) sync() error {
 	// If there are changes, commit and push
 	if hasChanges {
 		log.Println("Local changes detected, committing...")
-		
+
 		if err := s.git.Add([]string{"."}); err != nil {
 			return err
 		}
