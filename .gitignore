@@ -1,5 +1,5 @@
 # Binaries
-gitlife
+/gitlife
 *.exe
 *.dll
 *.so
