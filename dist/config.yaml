@@ -60,7 +60,8 @@ brews:
       email: bot@goreleaser.com
     commit_msg_template: Brew formula update for {{ .ProjectName }} version {{ .Tag }}
     directory: Formula
-    install: bin.install "gitlife"
+    install: |
+      bin.install "gitlife"
     test: |
       system "#{bin}/gitlife --help"
     description: Personal productivity system for developers using Git as database

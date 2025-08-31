@@ -5,21 +5,21 @@
 class Gitlife < Formula
   desc "Personal productivity system for developers using Git as database"
   homepage "https://github.com/wguilherme/gitlife"
-  version "0.0.1-next"
+  version "0.0.2-next"
   license "MIT"
 
   on_macos do
     on_intel do
-      url "https://github.com/wguilherme/gitlife/releases/download/v0.0.0/gitlife_Darwin_x86_64.tar.gz"
-      sha256 "bb61426d11894baf40c1e2477476c58b3c3990f44ef144e95f3592ef6447488a"
+      url "https://github.com/wguilherme/gitlife/releases/download/v0.0.1/gitlife_Darwin_x86_64.tar.gz"
+      sha256 "cbce96a05770b5a589f952890a07f1cf73e0ca03a70eea639b4c2691efa0bc24"
 
       def install
         bin.install "gitlife"
       end
     end
     on_arm do
-      url "https://github.com/wguilherme/gitlife/releases/download/v0.0.0/gitlife_Darwin_arm64.tar.gz"
-      sha256 "a02cd56ff1100b10e577afe1ca031d15ba706c6a8d64e31c0489b828fe21add1"
+      url "https://github.com/wguilherme/gitlife/releases/download/v0.0.1/gitlife_Darwin_arm64.tar.gz"
+      sha256 "8f7b2aa8627b5cea8e7ecae0d163c6a379aa6898ab3615d7b92ad92b56c327e0"
 
       def install
         bin.install "gitlife"
@@ -30,8 +30,8 @@ class Gitlife < Formula
   on_linux do
     on_intel do
       if Hardware::CPU.is_64_bit?
-        url "https://github.com/wguilherme/gitlife/releases/download/v0.0.0/gitlife_Linux_x86_64.tar.gz"
-        sha256 "a63d2547d27ef5d77970482621aa2e7ea5759420d6db3847b53fe9b142c44fbf"
+        url "https://github.com/wguilherme/gitlife/releases/download/v0.0.1/gitlife_Linux_x86_64.tar.gz"
+        sha256 "b7f44fef15b9c65b7187562a7ca0d57a00a4f02dcaaebc49b0f9e866e5be15b6"
 
         def install
           bin.install "gitlife"
@@ -40,8 +40,8 @@ class Gitlife < Formula
     end
     on_arm do
       if Hardware::CPU.is_64_bit?
-        url "https://github.com/wguilherme/gitlife/releases/download/v0.0.0/gitlife_Linux_arm64.tar.gz"
-        sha256 "03753ba4302b3ab8b9356f013ec0017a526b435f4a2c08969ee07ce47f9a490e"
+        url "https://github.com/wguilherme/gitlife/releases/download/v0.0.1/gitlife_Linux_arm64.tar.gz"
+        sha256 "a21e76e368185915dc3fe40b3f128c25d30740c3709fb1cee541e82d04864f12"
 
         def install
           bin.install "gitlife"

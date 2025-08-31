@@ -1,1 +1,1 @@
-{"project_name":"gitlife","tag":"v0.0.0","previous_tag":"","version":"0.0.1-next","commit":"e4a5d46d42565236d88ceaa642114fd35218877a","date":"2025-08-31T15:29:17.339265-03:00","runtime":{"goos":"darwin","goarch":"arm64"}}
+{"project_name":"gitlife","tag":"v0.0.1","previous_tag":"","version":"0.0.2-next","commit":"5a3fca0bcc034ef968c4ccd76efd0a5e661ad958","date":"2025-08-31T15:39:19.726311-03:00","runtime":{"goos":"darwin","goarch":"arm64"}}
