@@ -124,39 +124,40 @@ release:
 
     For more information, visit the [documentation](https://github.com/wguilherme/gitlife#readme).
 
-dockers:
-  - image_templates:
-      - "ghcr.io/wguilherme/gitlife:{{ .Version }}-amd64"
-      - "ghcr.io/wguilherme/gitlife:latest-amd64"
-    dockerfile: Dockerfile
-    use: buildx
-    build_flag_templates:
-      - "--platform=linux/amd64"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-  - image_templates:
-      - "ghcr.io/wguilherme/gitlife:{{ .Version }}-arm64"
-      - "ghcr.io/wguilherme/gitlife:latest-arm64"
-    dockerfile: Dockerfile
-    use: buildx
-    build_flag_templates:
-      - "--platform=linux/arm64"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
+# TODO: Fix Docker build - go.sum file not found in build context
+# dockers:
+#   - image_templates:
+#       - "ghcr.io/wguilherme/gitlife:{{ .Version }}-amd64"
+#       - "ghcr.io/wguilherme/gitlife:latest-amd64"
+#     dockerfile: Dockerfile
+#     use: buildx
+#     build_flag_templates:
+#       - "--platform=linux/amd64"
+#       - "--label=org.opencontainers.image.created={{.Date}}"
+#       - "--label=org.opencontainers.image.title={{.ProjectName}}"
+#       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+#       - "--label=org.opencontainers.image.version={{.Version}}"
+#   - image_templates:
+#       - "ghcr.io/wguilherme/gitlife:{{ .Version }}-arm64"
+#       - "ghcr.io/wguilherme/gitlife:latest-arm64"
+#     dockerfile: Dockerfile
+#     use: buildx
+#     build_flag_templates:
+#       - "--platform=linux/arm64"
+#       - "--label=org.opencontainers.image.created={{.Date}}"
+#       - "--label=org.opencontainers.image.title={{.ProjectName}}"
+#       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+#       - "--label=org.opencontainers.image.version={{.Version}}"
 
-docker_manifests:
-  - name_template: "ghcr.io/wguilherme/gitlife:{{ .Version }}"
-    image_templates:
-      - "ghcr.io/wguilherme/gitlife:{{ .Version }}-amd64"
-      - "ghcr.io/wguilherme/gitlife:{{ .Version }}-arm64"
-  - name_template: "ghcr.io/wguilherme/gitlife:latest"
-    image_templates:
-      - "ghcr.io/wguilherme/gitlife:latest-amd64"
-      - "ghcr.io/wguilherme/gitlife:latest-arm64"
+# docker_manifests:
+#   - name_template: "ghcr.io/wguilherme/gitlife:{{ .Version }}"
+#     image_templates:
+#       - "ghcr.io/wguilherme/gitlife:{{ .Version }}-amd64"
+#       - "ghcr.io/wguilherme/gitlife:{{ .Version }}-arm64"
+#   - name_template: "ghcr.io/wguilherme/gitlife:latest"
+#     image_templates:
+#       - "ghcr.io/wguilherme/gitlife:latest-amd64"
+#       - "ghcr.io/wguilherme/gitlife:latest-arm64"
 
 brews:
   - name: gitlife
