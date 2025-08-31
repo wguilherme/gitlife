@@ -159,19 +159,3 @@ release:
 #       - "ghcr.io/wguilherme/gitlife:latest-amd64"
 #       - "ghcr.io/wguilherme/gitlife:latest-arm64"
 
-# TODO: Configure Homebrew tap when HOMEBREW_TAP_GITHUB_TOKEN is available
-# brews:
-#   - name: gitlife
-#     repository:
-#       owner: wguilherme
-#       name: homebrew-tap
-#       branch: main
-#       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-#     directory: Formula
-#     homepage: "https://github.com/wguilherme/gitlife"
-#     description: "Personal productivity system for developers using Git as database"
-#     license: "MIT"
-#     test: |
-#       system "#{bin}/gitlife --help"
-#     install: |
-#       bin.install "gitlife"
