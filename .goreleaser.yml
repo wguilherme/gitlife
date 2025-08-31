@@ -105,11 +105,6 @@ release:
     go install github.com/wguilherme/gitlife/cmd/gitlife@{{ .Tag }}
     ```
 
-    #### Docker
-    ```bash
-    docker run --rm ghcr.io/wguilherme/gitlife:{{ .Tag }} --help
-    ```
-
     ### Quick Start
     ```bash
     # Clone your vault repository
