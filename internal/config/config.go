@@ -8,8 +8,9 @@ import (
 
 type Config struct {
 	// Vault configuration
-	VaultRepo string
-	VaultPath string
+	VaultRepo   string
+	VaultPath   string
+	GitLifeFolder string
 
 	// Authentication
 	SSHKeyPath string
@@ -31,8 +32,9 @@ type Config struct {
 func LoadFromEnv() *Config {
 	return &Config{
 		// Vault
-		VaultRepo: getEnv("GITLIFE_VAULT_REPO", ""),
-		VaultPath: getEnv("GITLIFE_VAULT_PATH", "./vault"),
+		VaultRepo:     getEnv("GITLIFE_VAULT_REPO", ""),
+		VaultPath:     getEnv("GITLIFE_VAULT_PATH", "./vault"),
+		GitLifeFolder: getEnv("GITLIFE_FOLDER", "gitlife"),
 
 		// Authentication
 		SSHKeyPath: getEnv("GITLIFE_SSH_KEY_PATH", expandHome("~/.ssh/id_rsa")),

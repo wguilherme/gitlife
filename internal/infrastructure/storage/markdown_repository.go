@@ -30,8 +30,10 @@ func NewMarkdownRepository(vaultPath string) *MarkdownRepository {
 }
 
 func NewMarkdownRepositoryWithGit(cfg *config.Config, gitService *git.Service) *MarkdownRepository {
+	// Use isolated folder within vault to avoid conflicts
+	gitlifeFolder := filepath.Join(cfg.VaultPath, cfg.GitLifeFolder)
 	return &MarkdownRepository{
-		filePath:   filepath.Join(cfg.VaultPath, "reading.md"),
+		filePath:   filepath.Join(gitlifeFolder, "reading.md"),
 		parser:     parser.NewReadingParser(),
 		gitService: gitService,
 		config:     cfg,
@@ -215,8 +217,9 @@ func (r *MarkdownRepository) writeToFile(items []*reading.Item) error {
 }
 
 func (r *MarkdownRepository) gitCommitAndPush(message string) error {
-	// Add the file
-	if err := r.gitService.Add([]string{"reading.md"}); err != nil {
+	// Add the gitlife folder
+	gitlifeFolder := r.config.GitLifeFolder
+	if err := r.gitService.Add([]string{gitlifeFolder + "/"}); err != nil {
 		return fmt.Errorf("git add failed: %w", err)
 	}
 
