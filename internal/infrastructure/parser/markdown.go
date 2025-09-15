@@ -131,6 +131,11 @@ func (p *Parser) parseSections(content string) []Section {
 			}
 		} else if trimmed == "" && inItemProperties {
 			inItemProperties = false
+			// Add current item when we finish reading its properties
+			if currentItem != nil && currentSection != nil {
+				currentSection.Items = append(currentSection.Items, *currentItem)
+				currentItem = nil
+			}
 		} else if currentItem != nil && !inItemProperties && trimmed != "" {
 			if currentItem.Content != "" {
 				currentItem.Content += "\n"

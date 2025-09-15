@@ -47,6 +47,13 @@ func (rp *ReadingParser) ParseDocument(content []byte) ([]*reading.Item, error) 
 func (rp *ReadingParser) sectionToStatus(title string) reading.Status {
 	title = strings.ToLower(title)
 
+	// Remove emojis and clean title for matching
+	title = strings.TrimSpace(title)
+	title = strings.ReplaceAll(title, "📚", "")
+	title = strings.ReplaceAll(title, "📖", "")
+	title = strings.ReplaceAll(title, "✅", "")
+	title = strings.TrimSpace(title)
+
 	if strings.Contains(title, "to read") || strings.Contains(title, "backlog") {
 		return reading.StatusToRead
 	}

@@ -23,8 +23,10 @@ type MarkdownRepository struct {
 }
 
 func NewMarkdownRepository(vaultPath string) *MarkdownRepository {
+	// Use consistent folder structure like the WithGit version
+	gitlifeFolder := filepath.Join(vaultPath, "gitlife")
 	return &MarkdownRepository{
-		filePath: filepath.Join(vaultPath, "reading.md"),
+		filePath: filepath.Join(gitlifeFolder, "reading.md"),
 		parser:   parser.NewReadingParser(),
 	}
 }

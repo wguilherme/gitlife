@@ -8,11 +8,12 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  closestCorners,
+  useDroppable,
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import {
   useSortable,
-  SortableContext as SortableProvider,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -142,18 +143,17 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ data, className }) => 
     <div className={clsx('w-full', className)}>
       <DndContext
         sensors={sensors}
+        collisionDetection={closestCorners}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-6 overflow-x-auto pb-4">
-          <SortableProvider items={columns.map(col => col.id)} strategy={horizontalListSortingStrategy}>
-            {columns.map((column) => (
-              <KanbanColumn
-                key={column.id}
-                column={column}
-              />
-            ))}
-          </SortableProvider>
+        <div className="flex gap-4 lg:gap-6 overflow-x-auto pb-4 min-h-[500px]">
+          {columns.map((column) => (
+            <KanbanColumn
+              key={column.id}
+              column={column}
+            />
+          ))}
         </div>
 
         <DragOverlay>
@@ -171,13 +171,7 @@ interface KanbanColumnProps {
 }
 
 const KanbanColumn: React.FC<KanbanColumnProps> = ({ column }) => {
-  const {
-    setNodeRef,
-    listeners,
-    isDragging,
-    transform,
-    transition,
-  } = useSortable({
+  const { setNodeRef, isOver } = useDroppable({
     id: column.id,
     data: {
       type: 'column',
@@ -185,18 +179,12 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ column }) => {
     },
   });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
   return (
     <div
       ref={setNodeRef}
-      style={style}
       className={clsx(
-        'flex flex-col w-80 bg-gray-50 dark:bg-gray-800 rounded-lg',
-        isDragging && 'opacity-50'
+        'flex flex-col w-72 lg:w-80 min-w-72 lg:min-w-80 bg-gray-50 dark:bg-gray-800 rounded-lg transition-colors',
+        isOver && 'bg-primary-50 dark:bg-primary-900/20 ring-2 ring-primary-200 dark:ring-primary-800'
       )}
     >
       {/* Column Header */}
@@ -216,11 +204,11 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ column }) => {
 
       {/* Column Content */}
       <div className="flex-1 p-4 space-y-3 min-h-[200px]">
-        <SortableProvider items={column.items.map(item => item.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={column.items.map(item => item.id)} strategy={verticalListSortingStrategy}>
           {column.items.map((item) => (
             <KanbanCard key={item.id} item={item} />
           ))}
-        </SortableProvider>
+        </SortableContext>
         
         {/* Add new item button */}
         <button className="w-full p-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center gap-2">

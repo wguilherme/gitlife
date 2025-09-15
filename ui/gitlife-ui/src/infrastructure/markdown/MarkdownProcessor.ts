@@ -28,9 +28,7 @@ export class MarkdownProcessor {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkFrontmatter)
-    .use(this.remarkKanban.bind(this))
-    .use(this.remarkTodo.bind(this))
-    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(remarkRehype, { allowDangerousHtml: false })
     .use(rehypeReact, {
       createElement,
       Fragment,
@@ -40,13 +38,30 @@ export class MarkdownProcessor {
   // Process markdown content and return React element
   process(content: string): ReactElement {
     try {
+      console.log('Processing markdown content:', content.substring(0, 100) + '...');
       const result = this.processor.processSync(content);
+      console.log('Markdown processing successful');
       return result.result as ReactElement;
     } catch (error) {
       console.error('Error processing markdown:', error);
+      console.error('Content that failed:', content);
+      
+      // Return a more helpful error message
       return createElement('div', {
-        className: 'text-red-600 p-4 border border-red-300 rounded-lg',
-      }, 'Error processing markdown content');
+        className: 'text-red-600 dark:text-red-400 p-4 border border-red-300 dark:border-red-700 rounded-lg bg-red-50 dark:bg-red-900/20',
+      }, [
+        createElement('h3', { key: 'title', className: 'font-semibold mb-2' }, 'Markdown Processing Error'),
+        createElement('p', { key: 'message', className: 'text-sm mb-2' }, 'Failed to render markdown content. This might be due to:'),
+        createElement('ul', { key: 'reasons', className: 'text-sm list-disc list-inside space-y-1' }, [
+          createElement('li', { key: 'r1' }, 'Complex markdown structures'),
+          createElement('li', { key: 'r2' }, 'Custom block types'),
+          createElement('li', { key: 'r3' }, 'Plugin configuration issues')
+        ]),
+        createElement('details', { key: 'details', className: 'mt-2' }, [
+          createElement('summary', { key: 'summary', className: 'cursor-pointer text-sm font-medium' }, 'Show raw content'),
+          createElement('pre', { key: 'raw', className: 'mt-2 text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-auto' }, content)
+        ])
+      ]);
     }
   }
 
